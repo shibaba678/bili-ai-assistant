@@ -1,0 +1,10 @@
+# 本项目只依赖 Python 标准库，不需要 pip install 任何东西。
+#
+# 唯一要求：Python 3.11 或更高（用到内置的 tomllib 解析 TOML 配置）。
+# 检查版本：
+#     python --version
+#
+# 如果你用的是 Python 3.10 或更低，有两个选择：
+#   1. 升级到 3.11+（推荐）
+#   2. 手动 pip install tomli，并把 bilicore/config.py 里的
+#      "import tomllib" 改成 "import tomli as tomllib"

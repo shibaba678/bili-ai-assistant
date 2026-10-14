@@ -1,0 +1,89 @@
+# ============================================
+# Bili AI Assistant 配置模板
+#
+# 推荐做法：直接运行 python setup.py，向导会带你填好并生成 config.toml。
+#
+# 想手动配置的话：复制本文件为 config.toml 再编辑。
+# config.toml 已在 .gitignore 里，不会被提交。
+# ============================================
+
+[bilibili]
+# ── 凭据（必填）──────────────────────────────────────────────
+# 浏览器登录 bilibili.com → F12 → Application → Storage → Cookies
+# → https://www.bilibili.com，复制对应字段的 Value。
+# 三项都要，缺 bili_jct 就没法点赞/发评论。
+
+# 登录态本体
+sessdata = "在这里填 SESSDATA 的值"
+
+# CSRF 令牌（点赞、发评论必需）
+bili_jct = "在这里填 bili_jct 的值"
+
+# 你的账号 UID（space.bilibili.com/XXX 里的数字）
+mid = "123456789"
+
+# 可选：设备标识。留空时程序会自动去主站领一个；
+# 但搜索接口强依赖它，领不到会回 -412 风控。
+buvid3 = ""
+
+# ── 身份 ────────────────────────────────────────────────────
+# 发评论账号的昵称（常驻监听模式下用来识别 @召唤）
+trigger_name = "你的昵称"
+
+# 评论区 @ 的目标 —— 填你自己的 B 站昵称，必须一字不差
+master_name = "你的B站昵称"
+
+# 单次请求超时（秒）
+timeout = 15
+
+# 常驻监听模式下检查新评论的间隔（秒）。B站风控敏感，别低于 300
+check_interval = 300
+
+[watch_list]
+# 常驻监听（monitor.py）要盯的 B站视频 BV 号列表
+bvids = [
+    "BV1xx411c7mD",
+]
+
+[deepseek]
+# 可选。助手自己写总结文案时用不到；不填就只用 --message 传文案。
+# https://platform.deepseek.com/ 申请，sk- 开头
+api_key = "sk-xxxxxxxxxxxxxxxx"
+
+base_url = "https://api.deepseek.com"
+model = "deepseek-chat"
+max_tokens = 500
+temperature = 0.3
+
+system_prompt = """你是一个视频总结助手，帮用户快速了解一个 B 站视频讲了什么。
+
+风格要求：
+- 像朋友聊天一样自然地讲，不要编号、不要「第一第二第三」、不要罗列要点
+- 直接说内容，不要「这个视频讲述了」这种套话开场
+- 抓住最核心的看点和一个有意思的细节，250 字以内
+- 不确定的地方不要编，字幕没有的信息就别提
+
+直接输出总结正文，不要寒暄。"""
+
+[reply]
+# 常驻监听模式的回复文案（post_summary_comment.py 不用这两项）
+prefix = ""
+suffix = ""
+
+# 两次发评论之间的间隔（秒），别低于 3
+reply_delay = 5
+
+[rate_limit]
+# API 请求最小间隔（秒）。所有请求串行，别往下调——这是账号安全的一部分。
+min_request_interval = 0.7
+
+max_retries = 3
+
+[logging]
+level = "INFO"
+file = "logs/bot.log"
+console = true
+
+[state]
+# 常驻监听模式的已处理记录 + 总结缓存
+file = "state.json"
